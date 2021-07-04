@@ -15,3 +15,7 @@
 ### 1. system/1234
 ### 2. scott/tiger
 ### 3. test_data_eng.sql
+
+
+## 5 관련링크
+https://www.oracletutorial.com/oracle-basics/oracle-check-constraint/
