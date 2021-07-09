@@ -697,6 +697,32 @@ out.println(Arrays.toString(iArr)+ "<br/>");
        - varchar2 : 가변길이 문자열
        
 *** advanced
+    
+**** index
+     #+BEGIN_SRC sql
+       CLEAR SCR
+       -- 인덱스 조회하기
+       SELECT table_name, column_name, index_name
+       FROM user_ind_columns
+       WHERE table_name = 'EMP2';
+
+       SELECT table_name, index_name
+       FROM user_indexes
+       WHERE table_name = 'EMP2';
+     #+END_SRC
+**** constraint
+     #+BEGIN_SRC sql
+       -- 제약조건 조회하기
+       --COL owner FOR a20
+       SELECT owner, constraint_name, constraint_type, status
+       FROM user_constraints
+       WHERE table_name = 'EMP2';
+
+       -- 컬럼명을 포함
+       SELECT owner, constraint_name, table_name, column_name
+       FROM user_cons_columns
+       WHERE table_name = 'EMP2';
+     #+END_SRC
 **** View
      - 오라클에서 아주 많이 사용되는 데이터관리용 object
      - 가상테이블, 원래 테이블은 데이터가 들어 있지만,
@@ -706,49 +732,49 @@ out.println(Arrays.toString(iArr)+ "<br/>");
 ***** Simple View
       - 생성할 서브 쿼리에 조인 조건이 들어가지 않고,
       - 1개의 테이블로 만들어 지는 간단한 뷰를 의미
-        #+BEGIN_SRC sql 
-        CREATE [OR REPLACE] [FORCE | NOFORCE] VIEW view_name [(alias, alias, ...)]
-        AS sub-query 
-        [ WITH CHECK OPTION [CONSTRAINT 제약조건]]
-        [ WITH READ ONLY]
-        
-        CREATE OR REPLACE VIEW v_emp1
-        AS 
+	#+BEGIN_SRC sql 
+	CREATE [OR REPLACE] [FORCE | NOFORCE] VIEW view_name [(alias, alias, ...)]
+	AS sub-query 
+	[ WITH CHECK OPTION [CONSTRAINT 제약조건]]
+	[ WITH READ ONLY]
+	
+	CREATE OR REPLACE VIEW v_emp1
+	AS 
 	SELECT emp_no, emp_name, hiredate
-        FROM emp;
-        SELECT * FROM v_emp1;
-        #+END_SRC
+	FROM emp;
+	SELECT * FROM v_emp1;
+	#+END_SRC
 ***** Complex View
       - Sub Query 부분에 여러개의 테이블이 Join되어 생성되는 것
       - 생성 문법은 단순 View와 동일
-        #+BEGIN_SRC sql 
-        CREATE OR REPLACE VIEW v_emp 
-        AS
-        SELECT e.emp_name, d.dep_name 
-        FROM emp e, dept d
-        WHERE e.deptno = d.deptno;
-        
-        SELECT * FROM v_emp;
-        #+END_SRC
+	#+BEGIN_SRC sql 
+	CREATE OR REPLACE VIEW v_emp 
+	AS
+	SELECT e.emp_name, d.dep_name 
+	FROM emp e, dept d
+	WHERE e.deptno = d.deptno;
+	
+	SELECT * FROM v_emp;
+	#+END_SRC
 ***** Inline View
       - view는 필요할 때 생성해 놓고 다른 쿼리에서 여러 번 반복해 재사용 할 수 있다.
       - 그러나 다른 쿼리에서 사용할 필요 없이 해당 SQL에서만 필요한 View일 경우
       - 번거롭게 View를 생성하지 않고 SQL 문장의 FROM절에 VIEW의 서브쿼리를 바로 적어사용
-        #+BEGIN_SRC sql 
-        SELECT e.deptno, d.dname, e.max_sal 
-        FROM (SELECT deptno, MAX(sal) max_sal 
-              FROM emp 
-              GROUP BY Deptno) e, dept d
-        WHERE e.deptno = d.deptno;
-        #+END_SRC
+	#+BEGIN_SRC sql 
+	SELECT e.deptno, d.dname, e.max_sal 
+	FROM (SELECT deptno, MAX(sal) max_sal 
+	      FROM emp 
+	      GROUP BY Deptno) e, dept d
+	WHERE e.deptno = d.deptno;
+	#+END_SRC
 ***** View 조회 및 삭제
-        #+BEGIN_SRC sql 
-        SET LINE 200 
-        COL view_name for a15
-        COL text for a50
-        col read_only for a10
-        SELECT view_name, text, read_only FROM user_views;
-        #+END_SRC
+      #+BEGIN_SRC sql 
+	SET LINE 200 
+	COL view_name for a15
+	COL text for a50
+	col read_only for a10
+	SELECT view_name, text, read_only FROM user_views;
+      #+END_SRC
 
 **** Procedure
      - 지정된 특정 처리를 생행하는 서브 프로그램의 한 유형으로 단독, 또는 다른 프로시저나 다른 툴(Oracle Developer...)
@@ -770,7 +796,7 @@ out.println(Arrays.toString(iArr)+ "<br/>");
        used at multiple places in PL/SQL code, or with multiple tables and among
        multiple users.
        
-#+BEGIN_SRC sql
+     #+BEGIN_SRC sql
 CREATE SEQUENCE seq_saleno
 INCREMENT BY 1
 START WITH 100001;
@@ -780,9 +806,9 @@ CREATE SEQUENCE seq_no
 START WITH 100;
 SELECT seq_no.NEXTVAL FROM dual;
 SELECT seq_no.CURRVAL FROM dual;
-#+END_SRC
+     #+END_SRC
 
-#+BEGIN_SRC java
+     #+BEGIN_SRC java
 	String sql = "SELECT seq_saleno.NEXTVAL saleno FROM dual";	
 	
 	ResultSet rs = stmt.executeQuery(sql);
@@ -791,7 +817,7 @@ SELECT seq_no.CURRVAL FROM dual;
 	//~~~~~~~~~~~~~~~~~
 	
 <input type="text" name="saleno" value="<%=saleno%>">
-#+END_SRC
+     #+END_SRC
     
 *** 데이터베이스 이름 및 user확인
     - SQL>SELECT * FORM global_name;
@@ -808,7 +834,7 @@ SELECT seq_no.CURRVAL FROM dual;
     1. classpath 확인, eclipse -> windows -> preferenecs -> java -> build path -> JRE_LIB
        #+CAPTION: Eclipse Class Path Check
        #+NAME:   fig:SED-HR4049
-[[./images/class_path.jpg][class path]]
+    [[./images/class_path.jpg][class path]]
     1. ojdbc6_g.jar를 복사하기 
     2. C:\oraclexe\app\oracle\product\11.2.0\server\jdbc\lib\ojdbc6_g.jar
     3. -> C:\Program Files\Java\jre1.8.0_251\lib\ext폴더로 복사
@@ -827,14 +853,14 @@ SELECT seq_no.CURRVAL FROM dual;
      - executeQuery() -> ResultSet(next(), previous(), first(), last(), get메소드(getString(), getInt()))
      - BOF -> 첫번째 row  data, 두번째 row data, 
        
-|------------------|
-| BOF              |
-| 첫번째 row  data |
-| 두번째 row data, |
-| ...              |
-| N번째 row data   |
-| EOF              |
-|------------------|
+     |------------------|
+     | BOF              |
+     | 첫번째 row  data |
+     | 두번째 row data, |
+     | ...              |
+     | N번째 row data   |
+     | EOF              |
+     |------------------|
 
 *** sqlplus script load
     - SQL>@c:\aa.sql
@@ -842,7 +868,7 @@ SELECT seq_no.CURRVAL FROM dual;
 
 ** Lec 20. DTO, DAO
 *** Sample data for exercise
-#+BEGIN_SRC sql
+    #+BEGIN_SRC sql
 CREATE TABLE member(
 name VARCHAR2(20),
 id VARCHAR2(20));
@@ -851,10 +877,10 @@ INSERT INTO member VALUES('Danny', 'pw2');
 SELECT * FROM member;
 COMMIT;
 ---------- don't forget to commit
-#+END_SRC
+    #+END_SRC
 
 *** DAO(data access object)
-#+BEGIN_SRC java
+    #+BEGIN_SRC java
 package com.javalec.daotoex;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -906,9 +932,9 @@ public class MemberDAO {
 		return dtos;
 	}
 }
-#+END_SRC
+    #+END_SRC
 *** DTO(data transaction object)
-#+BEGIN_SRC java
+    #+BEGIN_SRC java
 package com.javalec.daotoex;
 
 public class MemberDTO {
@@ -925,10 +951,10 @@ public class MemberDTO {
 	public String getId() {return id;}
 	public void setId(String id) {this.id = id;}
 }
-#+END_SRC
+    #+END_SRC
 
 *** index.htlm
-#+BEGIN_SRC html
+    #+BEGIN_SRC html
 <%@page import="com.javalec.daotoex.MemberDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.javalec.daotoex.MemberDAO"%>
@@ -956,7 +982,7 @@ public class MemberDTO {
 
 </body>
 </html>
-#+END_SRC
+    #+END_SRC
 
 ** Lec 26. 포워딩(Forwarding)
    - RequestDispatcher Class
@@ -967,7 +993,7 @@ public class MemberDTO {
     - 하나는 RequestDispatcher Class이고, 또하나는 HttpServletResponse Class이다.
     - RequestDispatcher 클래스의 경우 요청받은 객체(request)를 위임하는 컴포넌트에 *동일하게* 전달 할 수 있다.
      
-#+BEGIN_SRC java
+    #+BEGIN_SRC java
   @WebServlet("/RequestObj")
   public class RequestObj extends HttpServlet {
       private static final long serialVersionUID = 1L;
@@ -1012,7 +1038,7 @@ public class MemberDTO {
 
   }
 
-#+END_SRC
+    #+END_SRC
 
 * HTML TAGS
   - <form  >: a form
@@ -1053,10 +1079,10 @@ public class MemberDTO {
 ** [[https://www.w3schools.com/tags/att_global_style.asp][HTML style Attribute]]
    - Use of the style attribute in an HTML document
      
-#+BEGIN_SRC html
+   #+BEGIN_SRC html
 <h1 style="color:blue;text-align:center"> This is a header </h1>
 <p style="color:green">This is a paragraph. </p>
-#+END_SRC
+   #+END_SRC
 
 ** [[https://www.w3schools.com/cssref/css_selectors.asp][CSS Selectors]] 
 *** [[https://www.w3schools.com/cssref/sel_class.asp][CSS .class Selector]]
@@ -1072,11 +1098,11 @@ public class MemberDTO {
      
 *** Example 1
     - Style all <p> elements with class="hometown"
-#+BEGIN_SRC css
+    #+BEGIN_SRC css
 p.hometown{
 background-color : yellow
 }
-#+END_SRC
+    #+END_SRC
 
 *** Example 2
     - This <p> element will be styled according to class="center" and to class="large"
@@ -1090,26 +1116,26 @@ background-color : yellow
 ** <a> tag
    - The <a> tag defines a hyperlink, which is used to link from one page to another.
    - The most important attribute of the <a> element is the href attribute, which indicates the link's destination.
-| Attribute | Value   | Description                                    |
-|-----------+---------+------------------------------------------------|
-| href      | URL     | Specifies the URL of the page the link goes to |
-| target    | _blank  | Specifies where to open the linked document    |
-|           | _parent |                                                |
-|           | _self   |                                                |
-|           | _top    |                                                |
-|-----------+---------+------------------------------------------------|
+   | Attribute | Value   | Description                                    |
+   |-----------+---------+------------------------------------------------|
+   | href      | URL     | Specifies the URL of the page the link goes to |
+   | target    | _blank  | Specifies where to open the linked document    |
+   |           | _parent |                                                |
+   |           | _self   |                                                |
+   |           | _top    |                                                |
+   |-----------+---------+------------------------------------------------|
 
-#+BEGIN_SRC html
+   #+BEGIN_SRC html
 <!-- open a link  in a new brower window -->
 <a href="https://www.w3schools.com" target="_blank">Visit W3Schools.com!</a>
 
 <!-- open a link  to a JavaScript -->
 <a href="javascript:alert('Hello World!');">Execute JavaScript</a>
-#+END_SRC
+   #+END_SRC
 
 ** <h1>...<h6> 
    - defines HTML headings
-#+BEGIN_SRC html
+   #+BEGIN_SRC html
 <!-- the Six different HTML headings -->
 <h1>This is heading 1</h1>
 <h2>This is heading 2</h2>
@@ -1117,14 +1143,14 @@ background-color : yellow
 <h4>This is heading 4</h4>
 <h5>This is heading 5</h5>
 <h6>This is heading 6</h6>
-#+END_SRC
+   #+END_SRC
 
-[[https://www.w3schools.com/TAGS/tag_hn.asp][background color and text color of headings with CSS]]
-#+BEGIN_SRC html
+   [[https://www.w3schools.com/TAGS/tag_hn.asp][background color and text color of headings with CSS]]
+   #+BEGIN_SRC html
 <!-- Set the background color and text color of headings (with CSS)-->
 <h1 style="background-color:DodgerBlue;">Hello World</h1>
 <h2 style="color:Tomato;">Hello World</h2>
-#+END_SRC
+   #+END_SRC
     
 ** form tag
    - used to create *an HTML form for user input*.
@@ -1142,10 +1168,10 @@ background-color : yellow
 * Java Script
 ** [[https://www.w3schools.com/js/js_window.asp][window]]   
 *** [[https://www.w3schools.com/jsref/met_win_open.asp][open()]]
-   - The open() method opens a new brower window, or a new tab, depending on your
-   - brower settings and the parameter values
-     
-#+BEGIN_SRC javascript
+    - The open() method opens a new brower window, or a new tab, depending on your
+    - brower settings and the parameter values
+
+    #+BEGIN_SRC javascript
   //window.open(URL, name, specs, replace)
   function fn_search() {
       var child = window.open("popup.jsp", "검색", "width=400px,height=300px");
@@ -1154,10 +1180,10 @@ background-color : yellow
 	  location.href="index.jsp?section=select&opt=" + result[0] + "&value=" + result[1];
       });
   }
-#+END_SRC
+    #+END_SRC
 *** [[https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage][postMessage()]]
     
-#+BEGIN_SRC javascript
+    #+BEGIN_SRC javascript
   function fn_result() {
       var radio = document.querySelectorAll("input[type='radio']");
       var opt;
@@ -1181,7 +1207,7 @@ background-color : yellow
       parent.postMessage(opt + ":" + value);
       window.close();
   }	
-#+END_SRC
+    #+END_SRC
 
 **  [[https://www.w3schools.com/js/js_htmldom.asp][document]] 
 *** [[https://www.w3schools.com/jsref/met_element_queryselector.asp][querySelector()]]
@@ -1191,7 +1217,7 @@ background-color : yellow
    - The addEventlistener() method attataches an event handler to the specified element.
      
 
-#+BEGIN_SRC javascript
+   #+BEGIN_SRC javascript
 <script>
 function update(){
 	if(document.forms.form1.Id.value.trim() == ""){		
@@ -1218,7 +1244,7 @@ function update(){
 	document.forms.form1.submit();	
 }
 </script>
-#+END_SRC
+   #+END_SRC
 * Misc
 ** [[https://m.blog.naver.com/goddlaek/220901890910][CGI 그리고 Servlet과 JSP와의 관계]]
    - CGI
