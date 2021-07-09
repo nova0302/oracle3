@@ -697,19 +697,7 @@ out.println(Arrays.toString(iArr)+ "<br/>");
        - varchar2 : 가변길이 문자열
        
 *** advanced
-    
-**** index
-     #+BEGIN_SRC sql
-       CLEAR SCR
-       -- 인덱스 조회하기
-       SELECT table_name, column_name, index_name
-       FROM user_ind_columns
-       WHERE table_name = 'EMP2';
 
-       SELECT table_name, index_name
-       FROM user_indexes
-       WHERE table_name = 'EMP2';
-     #+END_SRC
 **** constraint
      #+BEGIN_SRC sql
        -- 제약조건 조회하기
@@ -721,6 +709,23 @@ out.println(Arrays.toString(iArr)+ "<br/>");
        -- 컬럼명을 포함
        SELECT owner, constraint_name, table_name, column_name
        FROM user_cons_columns
+       WHERE table_name = 'EMP2';
+     #+END_SRC
+**** index
+     #+BEGIN_SRC sql
+
+       COL table_name FOR a10
+       COL column_name FOR a10
+       COL index_name FOR a12
+       CLEAR SCR
+
+       -- 인덱스 조회하기
+       SELECT table_name, column_name, index_name
+       FROM user_ind_columns
+       WHERE table_name = 'EMP2';
+
+       SELECT table_name, index_name
+       FROM user_indexes
        WHERE table_name = 'EMP2';
      #+END_SRC
 **** View
