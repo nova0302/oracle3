@@ -52,8 +52,8 @@ echo Invoke Default SQL Data to Scott
 start cmd /k "sqlplus -s scott/tiger @%download_path% && exit /b 0"
 echo Done!
 
-echo set linesize 999> %conf_path%
-echo set pagesize 999>> %conf_path%
+echo set linesize 200 %conf_path%
+echo set pagesize 50 %conf_path%
 
 start cmd /k sqlplus scott/tiger @%conf_path%
 

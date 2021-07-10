@@ -701,7 +701,8 @@ out.println(Arrays.toString(iArr)+ "<br/>");
 **** constraint
      #+BEGIN_SRC sql
        -- 제약조건 조회하기
-       --COL owner FOR a20
+       COL owner FOR a20
+       CLEAR SCR
        SELECT owner, constraint_name, constraint_type, status
        FROM user_constraints
        WHERE table_name = 'EMP2';
@@ -714,10 +715,10 @@ out.println(Arrays.toString(iArr)+ "<br/>");
 **** index
      #+BEGIN_SRC sql
 
+       CLEAR SCR
        COL table_name FOR a10
        COL column_name FOR a10
        COL index_name FOR a12
-       CLEAR SCR
 
        -- 인덱스 조회하기
        SELECT table_name, column_name, index_name
